@@ -1,0 +1,41 @@
+.manage-users-container {
+  margin-top: 20px;
+  margin-bottom: 100px;
+}
+
+.manage-users-paper {
+  padding: 30px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.manage-users-title {
+  color: #2e8b57;
+  margin-bottom: 20px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.create-account-button {
+  margin-bottom: 20px !important;
+  background-color: #3cb371;
+}
+
+.create-account-button:hover {
+  background-color: #2e8b57;
+}
+
+.MuiTableCell-head {
+  background-color: #2e8b57;
+  color: white;
+  font-weight: bold;
+}
+
+.MuiTableCell-body {
+  color: #2e8b57;
+}
+
+.MuiTableRow-root:nth-of-type(even) {
+  background-color: #f0f8f0;
+}

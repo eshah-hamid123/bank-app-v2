@@ -1,0 +1,57 @@
+databaseChangeLog:
+  - changeSet:
+      id: schema-transactions
+      author: bank team
+      changes:
+        - createTable:
+            tableName: transactions
+            columns:
+              - column:
+                  name: transaction_id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: transactions_pk
+              - column:
+                  name: date
+                  type: date
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: amount
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: sender_account_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: receiver_account_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            baseTableName: transactions
+            baseColumnNames: sender_account_id
+            referencedTableName: accounts
+            referencedColumnNames: account_id
+            constraintName: fk_transactions_sender_account
+            onDelete: CASCADE
+
+        - addForeignKeyConstraint:
+            baseTableName: transactions
+            baseColumnNames: receiver_account_id
+            referencedTableName: accounts
+            referencedColumnNames: account_id
+            constraintName: fk_transactions_receiver_account
+            onDelete: CASCADE

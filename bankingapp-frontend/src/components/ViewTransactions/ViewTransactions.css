@@ -1,0 +1,24 @@
+.view-transactions-container {
+  margin-top: 50px;
+  margin-bottom: 100px;
+}
+
+.view-transactions-paper {
+  padding: 20px;
+  background-color: #f9f9f9;
+}
+
+.view-transactions-title {
+  color: #2e8b57;
+  margin-bottom: 20px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.view-transactions-table-container {
+  margin-top: 20px;
+}
+
+.MuiTableCell-root {
+  color: #333;
+}

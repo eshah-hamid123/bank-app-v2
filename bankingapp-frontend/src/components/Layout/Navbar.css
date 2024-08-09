@@ -1,0 +1,13 @@
+.navbar {
+  background-color: #155f35 !important;
+}
+
+.navbar-title {
+  flex-grow: 1;
+}
+
+.navbar-links a {
+  text-decoration: none;
+  color: white;
+  margin-right: 10px;
+}

@@ -1,0 +1,37 @@
+.unauthorized-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f8f9fa;
+    text-align: center;
+  }
+  
+  .unauthorized-title {
+    font-size: 2.5rem;
+    color: #dc3545;
+    margin-bottom: 1rem;
+  }
+  
+  .unauthorized-message {
+    font-size: 1.2rem;
+    color: #6c757d;
+    margin-bottom: 2rem;
+  }
+  
+  .unauthorized-link {
+    font-size: 1rem;
+    color:#3ead6e;
+    text-decoration: none;
+    border: 1px solid#2e8b57;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  .unauthorized-link:hover {
+    background-color: #0f4d2a;
+    color: #fff;
+  }
+  

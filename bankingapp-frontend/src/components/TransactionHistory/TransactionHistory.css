@@ -1,0 +1,29 @@
+.transaction-history-container {
+    margin-top: 2rem;
+  }
+  
+  .transaction-history-paper {
+    padding: 2rem;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+  }
+  
+  .transaction-history-title {
+    color: #163d29;
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+  
+  .transaction-item-paper {
+    padding: 1rem;
+    background-color: #ffffff;
+    border-radius: 10px;
+  }
+  
+  .table-cell-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  

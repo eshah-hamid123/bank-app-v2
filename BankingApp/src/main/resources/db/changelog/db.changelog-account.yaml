@@ -1,0 +1,84 @@
+databaseChangeLog:
+  - changeSet:
+      id: schema-bank-account
+      author: bank team
+      changes:
+        - createTable:
+            tableName: accounts
+            columns:
+              - column:
+                  name: account_id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: accounts_pk
+              - column:
+                  name: username
+                  type: varchar(50)
+              - column:
+                  name: password
+                  type: varchar(200)
+              - column:
+                  name: role
+                  type: varchar(200)
+              - column:
+                  name: email
+                  type: varchar(200)
+              - column:
+                  name: address
+                  type: varchar(200)
+              - column:
+                  name: balance
+                  type: bigint
+              - column:
+                  name: account_number
+                  type: varchar(50)
+              - column:
+                  name: is_active
+                  type: boolean
+                  constraints:
+                    nullable: false
+                    defaultValueBoolean: true
+
+
+        - addUniqueConstraint:
+            tableName: accounts
+            columnNames: account_number
+            constraintName: accounts_uk
+        - addUniqueConstraint:
+            tableName: accounts
+            columnNames: username
+            constraintName: accounts_uk_username
+        - addUniqueConstraint:
+            tableName: accounts
+            columnNames: email
+            constraintName: accounts_uk_email
+
+  - changeSet:
+      id: data-admin
+      author: bank team
+      changes:
+        - insert:
+            tableName: accounts
+            columns:
+              - column:
+                  name: username
+                  value: admin
+              - column:
+                  name: password
+                  value: '$2a$12$gYnsEf6Zj17uftFeRgPk.u/Fvz9BBdDUnnLUdEqnx/9MSBNygQY6G'
+              - column:
+                  name: role
+                  value: admin
+              - column:
+                  name: email
+                  value: admin@gmail.com
+              - column:
+                  name: address
+                  value: Lahore, Pakistan
+              - column:
+                  name: is_active
+                  valueBoolean: true
+
