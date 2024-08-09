@@ -1,60 +1,55 @@
-//package com.assignment.BankingApp.account;
-//
-//import jakarta.persistence.EntityNotFoundException;
-//import org.springframework.dao.DataIntegrityViolationException;
-//import org.springframework.data.domain.Page;
-//import org.springframework.data.domain.PageRequest;
-//import org.springframework.security.access.AccessDeniedException;
-//import org.springframework.security.core.Authentication;
-//import org.springframework.security.core.context.SecurityContextHolder;
-//import org.springframework.security.crypto.password.PasswordEncoder;
-//import org.springframework.stereotype.Service;
-//
-//import java.util.List;
-//import java.util.Optional;
-//import java.util.stream.Collectors;
-//
-//@Service
-//public class AccountService {
-//
-//    private final AccountRepository accountRepository;
-//    private final PasswordEncoder passwordEncoder;
-//
-//    private static final int ACCOUNT_NUMBER_LENGTH = 8;
-//    private static final int MAX_PAGE_SIZE = 1000;
-//
-//    public AccountService(AccountRepository accountRepository, PasswordEncoder passwordEncoder) {
-//        this.accountRepository = accountRepository;
-//        this.passwordEncoder = passwordEncoder;
-//    }
-//
-//    public Account createAccount(Account account) {
-//        if (accountRepository.existsByUsername(account.getUsername())) {
-//            throw new DataIntegrityViolationException("Username already exists");
-//        }
-//        if (accountRepository.existsByEmail(account.getEmail())) {
-//            throw new DataIntegrityViolationException("Email already exists");
-//        }
-//        if (accountRepository.existsByAccountNumber(account.getAccountNumber())) {
-//            throw new DataIntegrityViolationException("Account number already exists");
-//        }
-//
-//        if (account.getBalance() <= 0) {
-//            throw new IllegalArgumentException("Balance must be greater than 0");
-//        }
-//
-//        if (account.getAccountNumber().length() != ACCOUNT_NUMBER_LENGTH) {
-//            throw new IllegalArgumentException("Account number must be exactly " + ACCOUNT_NUMBER_LENGTH + " digits long");
-//        }
-//
-//        account.setRole("account-holder");
-//        //account.setPassword(account.getPassword());
-//        account.setPassword(passwordEncoder.encode(account.getPassword()));
-//        account.setIsActive(true);
-//
-//        return accountRepository.save(account);
-//    }
-//
+package com.assignment.BankingApp.account;
+
+import com.assignment.BankingApp.user.UserAccountDTO;
+import jakarta.persistence.EntityNotFoundException;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+@Service
+public class AccountService {
+
+    private final AccountRepository accountRepository;
+
+    private static final int ACCOUNT_NUMBER_LENGTH = 10;
+    private static final int MAX_PAGE_SIZE = 1000;
+
+    public AccountService(AccountRepository accountRepository) {
+        this.accountRepository = accountRepository;
+
+    }
+
+    public Account createAccount(UserAccountDTO payload, Long userId) {
+
+        if (accountRepository.existsByAccountNumber(payload.getAccountNumber())) {
+            throw new DataIntegrityViolationException("Account number already exists");
+        }
+
+        if (payload.getBalance() <= 0) {
+            throw new IllegalArgumentException("Balance must be greater than 0");
+        }
+
+        if (payload.getAccountNumber().length() != ACCOUNT_NUMBER_LENGTH) {
+            throw new IllegalArgumentException("Account number must be exactly " + ACCOUNT_NUMBER_LENGTH + " digits long");
+        }
+        Account newAccount = new Account();
+        newAccount.setAccountNumber(payload.getAccountNumber());
+        newAccount.setBalance(payload.getBalance());
+        newAccount.setUserId(userId);
+        newAccount.setIsActive(true);
+
+        return accountRepository.save(newAccount);
+    }
+
 //    public Optional<Account> getAccountById(Long accountId) {
 //        Account account = getCurrentLoggedInUser();
 //        if (account.getId().equals(accountId) || account.getId().equals(1L)) {
@@ -113,4 +108,4 @@
 //        return accountRepository.findByUsername(loggedInUsername)
 //                .orElseThrow(() -> new RuntimeException("User not found"));
 //    }
-//}
+}

@@ -39,8 +39,6 @@ public class User {
 
     private String address;
 
-    private Long balance;
-
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
