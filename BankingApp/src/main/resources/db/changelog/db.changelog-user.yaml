@@ -1,0 +1,90 @@
+databaseChangeLog:
+  - changeSet:
+      id: schema-bank-account
+      author: bank team
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: user_id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: accounts_pk
+              - column:
+                  name: username
+                  type: varchar(50)
+              - column:
+                  name: password
+                  type: varchar(200)
+              - column:
+                  name: role
+                  type: varchar(200)
+              - column:
+                  name: email
+                  type: varchar(200)
+              - column:
+                  name: address
+                  type: varchar(200)
+              - column:
+                  name: is_active
+                  type: boolean
+                  constraints:
+                    nullable: false
+                    defaultValueBoolean: true
+              - column:
+                  name: created_at
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+
+        - addUniqueConstraint:
+            tableName: users
+            columnNames: username
+            constraintName: users_uk_username
+        - addUniqueConstraint:
+            tableName: users
+            columnNames: email
+            constraintName: users_uk_email
+
+  - changeSet:
+      id: data-admin
+      author: bank team
+      changes:
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: username
+                  value: admin
+              - column:
+                  name: password
+                  value: '$2a$12$gYnsEf6Zj17uftFeRgPk.u/Fvz9BBdDUnnLUdEqnx/9MSBNygQY6G'
+              - column:
+                  name: role
+                  value: admin
+              - column:
+                  name: email
+                  value: admin@gmail.com
+              - column:
+                  name: address
+                  value: Lahore, Pakistan
+              - column:
+                  name: is_active
+                  valueBoolean: true
+              - column:
+                  name: created_at
+                  valueDate: "2024-08-09T00:00:00"
+              - column:
+                  name: updated_at
+                  valueDate: "2024-08-09T00:00:00"
