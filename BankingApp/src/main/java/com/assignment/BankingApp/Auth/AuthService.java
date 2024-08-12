@@ -1,7 +1,4 @@
 package com.assignment.BankingApp.Auth;
-
-import com.assignment.BankingApp.account.Account;
-import com.assignment.BankingApp.account.AccountRepository;
 import com.assignment.BankingApp.security.JwtHelper;
 import com.assignment.BankingApp.security.JwtResponse;
 import com.assignment.BankingApp.user.User;

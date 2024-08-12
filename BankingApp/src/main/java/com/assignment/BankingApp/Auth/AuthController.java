@@ -32,7 +32,7 @@ public class AuthController {
             return new ResponseEntity<>(response.getUser(), headers, HttpStatus.OK);
         } catch (BadCredentialsException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
-        } catch(Exception e) {
+        } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
         }
     }

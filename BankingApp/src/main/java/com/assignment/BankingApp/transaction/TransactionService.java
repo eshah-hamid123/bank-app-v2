@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -49,11 +48,8 @@ public class TransactionService {
             // Handle the exception and rethrow it with a specific message
             throw new Exception("Failed to get the current logged-in user: " + e.getMessage(), e);
         }
-            Account senderAccount = null;
-            Optional <Account> optionalAccount = accountRepository.findByUserId(senderUser.getId());
-            if (optionalAccount.isPresent()) {
-                senderAccount = optionalAccount.get();
-            }
+
+            Account senderAccount = accountRepository.findByUserId(senderUser.getId()).get();
             Account receiverAccount = getAccountByNumber(newTransaction.getRecieverAccountNumber());
             User recieverUser = userRepository.findById(receiverAccount.getUserId()).get();
             if (senderAccount.equals(receiverAccount)) {

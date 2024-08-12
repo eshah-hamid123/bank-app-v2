@@ -4,11 +4,7 @@ import com.assignment.BankingApp.account.AccountService;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import java.util.ArrayList;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -51,7 +47,7 @@ public class UserService {
         newUser.setIsActive(true);
 
         User createdUser =  userRepository.save(newUser);
-        Account createdAccount = accountService.createAccount(payload, createdUser.getId());
+        accountService.createAccount(payload, createdUser.getId());
     }
 
         public User updateUser(Long userId, UserAccountDTO payload) {

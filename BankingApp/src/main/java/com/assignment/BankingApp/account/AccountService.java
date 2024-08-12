@@ -48,7 +48,7 @@ public class AccountService {
 
     public void updateAccount(Long userId, Long balance) {
         Optional<Account> existingAccount = accountRepository.findByUserId(userId);
-        if (existingAccount.isPresent()){
+        if (existingAccount.isPresent()) {
             Account accountToUpdate = existingAccount.get();
             accountToUpdate.setBalance(balance);
             accountRepository.save(accountToUpdate);
@@ -59,34 +59,11 @@ public class AccountService {
 
     public void deActivateAccount(Long userId) {
         Optional<Account> existingAccount = accountRepository.findByUserId(userId);
-        if (existingAccount.isPresent()){
+        if (existingAccount.isPresent()) {
             Account accountToDelete = existingAccount.get();
             accountToDelete.setBalance(0L);
             accountToDelete.setIsActive(false);
             accountRepository.save(accountToDelete);
         }
     }
-
-//
-//    public List<Account> findAll(Integer page, Integer size) {
-//        if (page < 0) {
-//            page = 0;
-//        }
-//        if (size > MAX_PAGE_SIZE) {
-//            size = MAX_PAGE_SIZE;
-//        }
-//        Page<Account> accountPage = accountRepository.findAll(PageRequest.of(page, size));
-//        return accountPage.stream()
-//                .filter(Account::getIsActive)
-//                .collect(Collectors.toList());
-//    }
-//
-//
-//    private Account getCurrentLoggedInUser() {
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        String loggedInUsername = authentication.getName();
-//
-//        return accountRepository.findByUsername(loggedInUsername)
-//                .orElseThrow(() -> new RuntimeException("User not found"));
-//    }
 }

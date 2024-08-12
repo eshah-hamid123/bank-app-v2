@@ -145,7 +145,7 @@ class BankingAppApplicationTests {
 				.andExpect(status().isNotFound());
 	}
 
-	@Order(8)
+	@Order(11)
 	@Test
 	public void testDeleteUserSuccess() throws Exception {
 		MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/api/v2/auth/login")
@@ -221,67 +221,87 @@ class BankingAppApplicationTests {
 	}
 
 
-//	@Order(6)
-//	@Test
-//	public void testCreateTransaction() throws Exception {
-//		MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/v1/auth/login")
-//						.contentType(MediaType.APPLICATION_JSON)
-//						.content("{\"username\":\"test2\",\"password\":\"Test123*\"}"))
-//				.andExpect(status().isOk())
-//				.andReturn();
-//
-//		String responseBody = result.getResponse().getContentAsString();
-//		String authToken = JsonPath.read(responseBody, "$.jwtToken");
-//		mockMvc.perform(MockMvcRequestBuilders.post("/v1/transactions/transfer-money")
-//						.contentType(MediaType.APPLICATION_JSON)
-//						.content("{\"recieverAccountNumber\":\"12345678\",\"amount\":50, \"description\":\"testing\"}")
-//						.with(csrf())
-//						.header("Authorization", "Bearer " + authToken))
-//				.andExpect(status().isCreated())
-//
-//				.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE));
-//	}
-//
-//
-//	@Order(7)
-//	@Test
-//	void testGetAllTransactionsSuccess() throws Exception {
-//
-//		MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/v1/auth/login")
-//						.contentType(MediaType.APPLICATION_JSON)
-//						.content("{\"username\":\"admin\",\"password\":\"Admin123*\"}"))
-//				.andExpect(status().isOk())
-//				.andReturn();
-//
-//		String responseBody = result.getResponse().getContentAsString();
-//		String authToken = JsonPath.read(responseBody, "$.jwtToken");
-//
-//		mockMvc.perform(MockMvcRequestBuilders.get("/v1/transactions/all-transactions")
-//						.with(csrf())
-//						.header("Authorization", "Bearer " + authToken))
-//				.andExpect(status().isOk());
-//	}
-//
+	@Order(8)
+	@Test
+	public void testCreateUser2Success() throws Exception {
+		MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/api/v2/auth/login")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content("{\"username\":\"admin\",\"password\":\"Admin123*\"}"))
+				.andExpect(status().isOk())
+				.andReturn();
 
-//
-//	@Order(8)
-//	@Test
-//	public void testCreateTransactionFailure_InsufficientBalance() throws Exception {
-//		MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/v1/auth/login")
-//						.contentType(MediaType.APPLICATION_JSON)
-//						.content("{\"username\":\"test2\",\"password\":\"Test123*\"}"))
-//				.andExpect(status().isOk())
-//				.andReturn();
-//
-//		String responseBody = result.getResponse().getContentAsString();
-//		String authToken = JsonPath.read(responseBody, "$.jwtToken");
-//
-//		mockMvc.perform(MockMvcRequestBuilders.post("/v1/transactions/transfer-money")
-//						.contentType(MediaType.APPLICATION_JSON)
-//						.content("{\"recieverAccountNumber\":\"12345678\",\"amount\":100000, \"description\":\"testing\"}")
-//						.with(csrf())
-//						.header("Authorization", "Bearer " + authToken))
-//				.andExpect(status().isBadRequest());
-//	}
+		String authToken = result.getResponse().getHeader("Authorization");
+		logger.info("Authorization Header: {}", authToken);
+		String userJson = "{\"username\":\"testUser2\",\"password\":\"Test1234\",\"email\":\"testuser2@example.com\",\"address\":\"Test Address\",\"balance\":1000,\"accountNumber\":\"1111111111\"}";
+
+		mockMvc.perform(MockMvcRequestBuilders.post("/api/v2/users")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(userJson)
+						.with(csrf())
+						.header("Authorization", authToken))
+				.andExpect(status().isCreated())
+				.andExpect(MockMvcResultMatchers.jsonPath("$.username").value("testUser2"))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.email").value("testuser2@example.com"));
+	}
+
+	@Order(9)
+	@Test
+	public void testCreateTransaction() throws Exception {
+		MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/api/v2/auth/login")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content("{\"username\":\"testUser2\",\"password\":\"Test1234\"}"))
+				.andExpect(status().isOk())
+				.andReturn();
+
+		String authToken = result.getResponse().getHeader("Authorization");
+		mockMvc.perform(MockMvcRequestBuilders.post("/api/v2/transactions")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content("{\"recieverAccountNumber\":\"1234567890\",\"amount\":50, \"description\":\"testing\"}")
+						.with(csrf())
+						.header("Authorization", authToken))
+				.andExpect(status().isCreated())
+
+				.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE));
+	}
+
+
+	@Order(10)
+	@Test
+	void testGetAllTransactionsSuccess() throws Exception {
+
+		MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/api/v2/auth/login")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content("{\"username\":\"admin\",\"password\":\"Admin123*\"}"))
+				.andExpect(status().isOk())
+				.andReturn();
+
+		String authToken = result.getResponse().getHeader("Authorization");
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/v2/transactions")
+						.with(csrf())
+						.header("Authorization", authToken))
+				.andExpect(status().isOk());
+	}
+
+
+
+	@Order(9)
+	@Test
+	public void testCreateTransactionFailure_InsufficientBalance() throws Exception {
+		MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/api/v2/auth/login")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content("{\"username\":\"testUser2\",\"password\":\"Test1234\"}"))
+				.andExpect(status().isOk())
+				.andReturn();
+
+		String authToken = result.getResponse().getHeader("Authorization");
+
+		mockMvc.perform(MockMvcRequestBuilders.post("/api/v2/transactions")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content("{\"recieverAccountNumber\":\"1234567890\",\"amount\":1000000, \"description\":\"testing\"}")
+						.with(csrf())
+						.header("Authorization", authToken))
+				.andExpect(status().isBadRequest());
+	}
 
 }
