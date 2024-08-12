@@ -12,14 +12,15 @@ const AdminDashboard = () => {
       try {
         const token = localStorage.getItem("token");
         const usersResponse = await axios.get(
-          "http://localhost:8080/v1/accounts/all-accounts",
+          "http://localhost:8080/api/v2/users",
           {
             headers: {
               Authorization: `Bearer ${token}`,
             },
           }
         );
-        setTotalUsers(usersResponse.data.length - 1);
+        console.log(usersResponse.data);
+        setTotalUsers(usersResponse.data.content.length);
       } catch (error) {
         console.error("Error fetching data", error);
       }

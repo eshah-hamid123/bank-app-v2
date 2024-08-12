@@ -31,7 +31,7 @@ const CreateAccount = () => {
 
   const passwordRegex =
     /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
-  const accountNumberLength = 8;
+  const accountNumberLength = 10;
   const accountNumberRegex = /^\d+$/;
 
   const handleChange = (e) => {
@@ -81,12 +81,11 @@ const CreateAccount = () => {
     }
 
     try {
-      //const salt = await bcrypt.genSalt(10);
       const hashedPassword = CryptoJS.SHA256(formData.password).toString(CryptoJS.enc.Hex);
       
       const token = localStorage.getItem("token");
       await axios.post(
-        "http://localhost:8080/v1/accounts/create-account",
+        "http://localhost:8080/api/v2/users",
         {
           ...formData,
           password: hashedPassword,

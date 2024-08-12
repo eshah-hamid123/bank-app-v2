@@ -13,7 +13,6 @@ import {
 import Layout from "../Layout/Layout";
 import "./Login.css";
 import { useAuth } from "../../hooks/AuthContext";
-import bcrypt from "bcryptjs";
 import CryptoJS from "crypto-js";
 
 const Login = () => {
@@ -31,7 +30,7 @@ const Login = () => {
       passwordToSend = CryptoJS.SHA256(password).toString(CryptoJS.enc.Hex);
     }
 
-    const response = await axios.post("http://localhost:8080/v1/auth/login", {
+    const response = await axios.post("http://localhost:8080/api/v2/auth/login", {
       username,
       password: passwordToSend,
     },
@@ -40,11 +39,11 @@ const Login = () => {
       if (response.status === 200) {
         const jwtToken = response.headers['authorization']?.split(' ')[1];
         console.log(jwtToken);
-        const  account = response.data;
-        const role = account.role;
+        const  user = response.data;
+        const role = user.role;
         localStorage.setItem("token", jwtToken);
         localStorage.setItem("role", role);
-        localStorage.setItem("accountId", account.id);
+        localStorage.setItem("userId", user.id);
 
         setAuthState({
           isAuthenticated: true,

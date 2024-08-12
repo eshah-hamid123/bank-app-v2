@@ -37,15 +37,14 @@ const ManageUsers = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    console.log("Hereeeeeee")
     axios
-      .get("http://localhost:8080/v1/accounts/all-accounts", {
+      .get("http://localhost:8080/api/v2/users", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       })
       .then((response) => {
-        setAccounts(response.data);
+        setAccounts(response.data.content);
         setLoading(false);
       })
       .catch((err) => {
@@ -64,7 +63,7 @@ const ManageUsers = () => {
   const handleDelete = (id) => {
     const token = localStorage.getItem("token");
     axios
-      .delete(`http://localhost:8080/v1/accounts/delete-account/${id}`, {
+      .delete(`http://localhost:8080/api/v2/users/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -139,7 +138,6 @@ const ManageUsers = () => {
                 </TableHead>
                 <TableBody>
                   {accounts
-                    .slice(1)
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((account) => (
                       <TableRow key={account.id}>

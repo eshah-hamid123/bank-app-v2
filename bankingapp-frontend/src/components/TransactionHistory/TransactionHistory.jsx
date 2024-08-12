@@ -30,7 +30,7 @@ const TransactionHistory = () => {
         const token = localStorage.getItem("token");
 
         const debitResponse = await axios.get(
-          "http://localhost:8080/v1/transactions/get-debit-transactions",
+          "http://localhost:8080/api/v2/transactions/debit-transactions",
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -39,7 +39,7 @@ const TransactionHistory = () => {
         );
 
         const creditResponse = await axios.get(
-          "http://localhost:8080/v1/transactions/get-credit-transactions",
+          "http://localhost:8080/api/v2/transactions/credit-transactions",
           {
             headers: {
               Authorization: `Bearer ${token}`,

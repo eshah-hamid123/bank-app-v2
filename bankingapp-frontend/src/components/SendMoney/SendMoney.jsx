@@ -35,7 +35,7 @@ const SendMoney = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.post(
-        "http://localhost:8080/v1/transactions/transfer-money",
+        "http://localhost:8080/api/v2/transactions",
         formData,
         {
           headers: {

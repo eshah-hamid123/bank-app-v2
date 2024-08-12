@@ -28,7 +28,7 @@ const ViewTransactions = () => {
       try {
         const token = localStorage.getItem("token");
         const response = await axios.get(
-          "http://localhost:8080/v1/transactions/all-transactions",
+          "http://localhost:8080/api/v2/transactions",
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -36,7 +36,6 @@ const ViewTransactions = () => {
           }
         );
 
-        // Reverse the transactions array
         const reversedTransactions = response.data.reverse();
         setTransactions(reversedTransactions);
       } catch (error) {

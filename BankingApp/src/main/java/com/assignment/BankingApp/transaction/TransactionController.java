@@ -54,7 +54,7 @@ public class TransactionController {
 //        return ResponseEntity.ok(transaction.get());
 //    }
 //
-    @GetMapping("/get-debit-transactions")
+    @GetMapping("/debit-transactions")
     public ResponseEntity<?> getDebitTransactions() {
         try {
             List<TransactionHistoryDTO> transactions = transactionService.getDebitTransactions();
@@ -65,7 +65,7 @@ public class TransactionController {
 
     }
 
-    @GetMapping("/get-credit-transactions")
+    @GetMapping("/credit-transactions")
     public ResponseEntity<?> getCreditTransactions() {
         try {
             List<TransactionHistoryDTO> transactions = transactionService.getCreditTransactions();

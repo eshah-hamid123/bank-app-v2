@@ -12,15 +12,15 @@ const AccountHolderDashboard = () => {
 
   const handleViewAccountDetails = async () => {
     try {
-      const accountId = localStorage.getItem("accountId");
-      if (!accountId) {
+      const userId = localStorage.getItem("userId");
+      if (!userId) {
         setErrorMessage("No account ID found.");
         return;
       }
 
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        `http://localhost:8080/v1/accounts/get-account/${accountId}`,
+        `http://localhost:8080/api/v2/users/${userId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

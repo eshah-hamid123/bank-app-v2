@@ -38,7 +38,7 @@ const EditAccount = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     axios
-      .get(`http://localhost:8080/v1/accounts/get-account/${accountId}`, {
+      .get(`http://localhost:8080/api/v2/users/${accountId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -86,22 +86,13 @@ const EditAccount = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if ((isPasswordModified && passwordError) || (isBalanceModified && balanceError)) {
-      return; 
-    }
-
     const token = localStorage.getItem("token");
     const updatedAccount = { ...account };
 
     try {
-      if (isPasswordModified && account.password !== "") {
-        //const salt = await bcrypt.genSalt(10);
-        updatedAccount.password = CryptoJS.SHA256(account.password).toString(CryptoJS.enc.Hex);
-        
-      }
 
       await axios.put(
-        `http://localhost:8080/v1/accounts/edit-account/${accountId}`,
+        `http://localhost:8080/api/v2/users/${accountId}`,
         updatedAccount,
         {
           headers: {
@@ -164,19 +155,7 @@ const EditAccount = () => {
               margin="normal"
               variant="outlined"
             />
-            <TextField
-              label="Password"
-              name="password"
-              type="password"
-              value={account.password}
-              inputProps={{ minLength: 6 }}
-              onChange={handleChange}
-              fullWidth
-              margin="normal"
-              variant="outlined"
-              helperText={passwordError}
-              error={!!passwordError}
-            />
+           
             <TextField
               label="Email"
               name="email"
