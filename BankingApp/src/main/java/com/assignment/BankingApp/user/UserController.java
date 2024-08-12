@@ -37,7 +37,7 @@ public class UserController {
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            return new ResponseEntity<>("Error creating account" + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Error creating account" + e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -76,7 +76,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasAnyAuthority('admin')")
-    @GetMapping("/all-accounts")
+    @GetMapping
     public ResponseEntity<?> getAllAccounts(@RequestParam(name = "page", defaultValue = "0") Integer page,
                                                                @RequestParam(name = "size", defaultValue = "1000") Integer size) {
         try {

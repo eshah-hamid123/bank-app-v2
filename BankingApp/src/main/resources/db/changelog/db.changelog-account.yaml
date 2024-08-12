@@ -13,7 +13,7 @@ databaseChangeLog:
                   constraints:
                     nullable: false
                     primaryKey: true
-                    primaryKeyName: accounts_pk
+                    primaryKeyName: accounts_pk2
               - column:
                   name: balance
                   type: bigint

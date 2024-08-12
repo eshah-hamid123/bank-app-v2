@@ -39,7 +39,7 @@ public class ApiSecurityConfiguration {
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        LOGGER.info("Ignored paths: {}", (Object) ignored); // Log the ignored paths
+        LOGGER.info("Ignored paths: {}", (Object) ignored);
         return web -> {
             for (String location : ignored) {
                 web.ignoring().requestMatchers(new AntPathRequestMatcher(location));
