@@ -9,9 +9,15 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import java.util.ArrayList;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -105,6 +111,43 @@ public class UserService {
         }
         return null;
     }
+
+    public Page<UserAccountDTO> getAllUsers(int page, int size) throws Exception {
+        User currentLoggedInUser = getCurrentLoggedInUser();
+
+        // Only allow if the current user is an admin (assuming user with ID 1L is an admin)
+        if (!currentLoggedInUser.getId().equals(1L)) {
+            throw new AccessDeniedException("You are not authorized to access this information.");
+        }
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<User> userPage = userRepository.findAll(pageable);
+        List<UserAccountDTO> userAccountDTOs = new ArrayList<>();
+
+        for (User user : userPage.getContent()) {
+            if (user.getIsActive()) {
+                Optional<Account> accountAgainstUser = accountService.getAccountByUserId(user.getId());
+
+                if (accountAgainstUser.isPresent()) {
+                    Account account = accountAgainstUser.get();
+                    UserAccountDTO userAccountDTO = new UserAccountDTO(
+                            user.getId(),
+                            user.getUsername(),
+                            user.getPassword(),
+                            user.getEmail(),
+                            user.getAddress(),
+                            account.getBalance(),
+                            account.getAccountNumber()
+                    );
+                    userAccountDTOs.add(userAccountDTO);
+                }
+            }
+
+        }
+
+        return new PageImpl<>(userAccountDTOs, pageable, userPage.getTotalElements());
+    }
+
 
     private User getCurrentLoggedInUser() throws Exception {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

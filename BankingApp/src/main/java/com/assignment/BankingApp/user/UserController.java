@@ -3,12 +3,14 @@ package com.assignment.BankingApp.user;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -71,6 +73,19 @@ public class UserController {
         } catch(Exception e) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied.");
         }
+    }
+
+    @PreAuthorize("hasAnyAuthority('admin')")
+    @GetMapping("/all-accounts")
+    public ResponseEntity<?> getAllAccounts(@RequestParam(name = "page", defaultValue = "0") Integer page,
+                                                               @RequestParam(name = "size", defaultValue = "1000") Integer size) {
+        try {
+            Page<UserAccountDTO> userAccounts = userService.getAllUsers(page, size);
+            return ResponseEntity.ok(userAccounts);
+        } catch(Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+
     }
 
 }
