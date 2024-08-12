@@ -28,7 +28,6 @@ public class UserController {
     @PreAuthorize("hasAnyAuthority('admin')")
     @PostMapping
     public ResponseEntity<?> createUser(@Valid @RequestBody UserAccountDTO payload) {
-
         try {
             userService.createUser(payload);
             return new ResponseEntity<>(payload, HttpStatus.CREATED);
