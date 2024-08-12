@@ -1,19 +1,10 @@
 package com.assignment.BankingApp.account;
 
 import com.assignment.BankingApp.user.UserAccountDTO;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class AccountService {
@@ -50,42 +41,32 @@ public class AccountService {
         return accountRepository.save(newAccount);
     }
 
-//    public Optional<Account> getAccountById(Long accountId) {
-//        Account account = getCurrentLoggedInUser();
-//        if (account.getId().equals(accountId) || account.getId().equals(1L)) {
-//            return accountRepository.findById(accountId);
-//        } else {
-//            throw new AccessDeniedException("You are not authorized to access this account.");
-//        }
-//    }
-//
-//    public Account updateAccount(Long accountId, Account updatedAccount) {
-//        Optional<Account> existingAccount = accountRepository.findById(accountId);
-//
-//        if (existingAccount.isPresent()) {
-//            Account accountToUpdate = existingAccount.get();
-//            accountToUpdate.setUsername(updatedAccount.getUsername());
-//            accountToUpdate.setPassword(updatedAccount.getPassword());
-//            accountToUpdate.setBalance(updatedAccount.getBalance());
-//            accountToUpdate.setPassword(passwordEncoder.encode(updatedAccount.getPassword()));
-//            accountToUpdate.setAddress(updatedAccount.getAddress());
-//            accountToUpdate.setEmail(updatedAccount.getEmail());
-//            return accountRepository.save(accountToUpdate);
-//        }
-//        return null;
-//    }
-//
-//    public void deactivateAccount(Long accountId) {
-//        Optional<Account> accountOptional = accountRepository.findById(accountId);
-//        if (accountOptional.isPresent()) {
-//            Account account = accountOptional.get();
-//            account.setIsActive(false);
-//            account.setBalance(0L);
-//            accountRepository.save(account);
-//        } else {
-//            throw new EntityNotFoundException("Account with id " + accountId + " not found");
-//        }
-//    }
+    public Optional<Account> getAccountByUserId(Long userId) {
+        return accountRepository.findByUserId(userId);
+
+    }
+
+    public void updateAccount(Long userId, Long balance) {
+        Optional<Account> existingAccount = accountRepository.findByUserId(userId);
+        if (existingAccount.isPresent()){
+            Account accountToUpdate = existingAccount.get();
+            accountToUpdate.setBalance(balance);
+            accountRepository.save(accountToUpdate);
+        }
+
+
+    }
+
+    public void deActivateAccount(Long userId) {
+        Optional<Account> existingAccount = accountRepository.findByUserId(userId);
+        if (existingAccount.isPresent()){
+            Account accountToDelete = existingAccount.get();
+            accountToDelete.setBalance(0L);
+            accountToDelete.setIsActive(false);
+            accountRepository.save(accountToDelete);
+        }
+    }
+
 //
 //    public List<Account> findAll(Integer page, Integer size) {
 //        if (page < 0) {

@@ -1,7 +1,7 @@
 package com.assignment.BankingApp.config;
 
 import com.assignment.BankingApp.security.JwtAuthenticationEntryEndpoint;
-//import com.assignment.BankingApp.security.JwtAuthenticationFilter;
+import com.assignment.BankingApp.security.JwtAuthenticationFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ public class ApiSecurityConfiguration {
     @Autowired
     private JwtAuthenticationEntryEndpoint point;
     @Autowired
-   // private JwtAuthenticationFilter filter;
+    private JwtAuthenticationFilter filter;
     private static final Logger LOGGER = LoggerFactory.getLogger(ApiSecurityConfiguration.class);
 
     @Value("${api.security.ignored}")
@@ -58,8 +58,8 @@ public class ApiSecurityConfiguration {
                 )
                 .sessionManagement(sessionManagement -> sessionManagement
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                );
-                //.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
+                )
+                .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
