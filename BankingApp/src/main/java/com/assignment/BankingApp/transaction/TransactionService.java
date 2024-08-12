@@ -80,71 +80,87 @@ public class TransactionService {
 
     }
 
-//    public List<TransactionHistoryDTO> findAll(Integer page, Integer size) {
-//        if (page < 0) {
-//            page = 0;
-//        }
-//        if (size > MAX_PAGE_SIZE) {
-//            size = MAX_PAGE_SIZE;
-//        }
-//        List<Transaction> transactions = transactionRepository.findAll(PageRequest.of(page, size)).getContent();
-//        return transactions.stream().map(transaction -> {
-//            String senderUsername = accountRepository.findById(transaction.getSenderAccountId())
-//                    .map(Account::getUsername)
-//                    .orElse("Unknown");
-//            String receiverUsername = accountRepository.findById(transaction.getReceiverAccountId())
-//                    .map(Account::getUsername)
-//                    .orElse("Unknown");
-//            return new TransactionHistoryDTO(
-//                    transaction.getId(),
-//                    transaction.getDescription(),
-//                    transaction.getAmount(),
-//                    transaction.getDate(),
-//                    senderUsername,
-//                    receiverUsername
-//            );
-//        }).collect(Collectors.toList());
-//    }
-//
-//    public Optional<Transaction> getTransactionById(Long transactionId) {
-//        return transactionRepository.findById(transactionId);
-//    }
-//
-//    public List<TransactionHistoryDTO> getDebitTransactions() {
-//        Account account = getCurrentLoggedInUser();
-//        List<Transaction> transactions = transactionRepository.findBySenderAccountId(account.getId());
-//        return transactions.stream().map(transaction -> {
-//            String receiverUsername = accountRepository.findById(transaction.getReceiverAccountId())
-//                    .map(Account::getUsername)
-//                    .orElse("Unknown");
-//            return new TransactionHistoryDTO(
-//                    transaction.getId(),
-//                    transaction.getDescription(),
-//                    transaction.getAmount(),
-//                    transaction.getDate(),
-//                    null,
-//                    receiverUsername
-//            );
-//        }).collect(Collectors.toList());
-//    }
-//
-//    public List<TransactionHistoryDTO> getCreditTransactions() {
-//        Account account = getCurrentLoggedInUser();
-//        List<Transaction> transactions = transactionRepository.findByReceiverAccountId(account.getId());
-//        return transactions.stream().map(transaction -> {
-//            String senderUsername = accountRepository.findById(transaction.getSenderAccountId())
-//                    .map(Account::getUsername)
-//                    .orElse("Unknown");
-//            return new TransactionHistoryDTO(
-//                    transaction.getId(),
-//                    transaction.getDescription(),
-//                    transaction.getAmount(),
-//                    transaction.getDate(),
-//                    senderUsername,
-//                    null
-//            );
-//        }).collect(Collectors.toList());
-//    }
+    public List<TransactionHistoryDTO> findAll(Integer page, Integer size) {
+        if (page < 0) {
+            page = 0;
+        }
+        if (size > MAX_PAGE_SIZE) {
+            size = MAX_PAGE_SIZE;
+        }
+        List<Transaction> transactions = transactionRepository.findAll(PageRequest.of(page, size)).getContent();
+        return transactions.stream().map(transaction -> {
+            Account senderAccount = accountRepository.findById(transaction.getSenderAccountId()).get();
+            String senderUsername = userRepository.findById(senderAccount.getUserId())
+                    .map(User::getUsername)
+                    .orElse("Unknown");
+
+            Account recieverAccount = accountRepository.findById(transaction.getReceiverAccountId()).get();
+            String receiverUsername = userRepository.findById(recieverAccount.getUserId())
+                    .map(User::getUsername)
+                    .orElse("Unknown");
+            return new TransactionHistoryDTO(
+                    transaction.getId(),
+                    transaction.getDescription(),
+                    transaction.getAmount(),
+                    transaction.getDate(),
+                    senderUsername,
+                    receiverUsername
+            );
+        }).collect(Collectors.toList());
+    }
+
+
+    public List<TransactionHistoryDTO> getDebitTransactions() throws Exception {
+        User currentLoggedInUser;
+        try {
+            currentLoggedInUser = getCurrentLoggedInUser();
+        } catch (Exception e) {
+            throw new Exception(e.getMessage(), e);
+        }
+
+        Account account = accountRepository.findByUserId(currentLoggedInUser.getId()).get();
+        List<Transaction> transactions = transactionRepository.findBySenderAccountId(account.getId());
+        return transactions.stream().map(transaction -> {
+            Account recieverAccount = accountRepository.findById(transaction.getReceiverAccountId()).get();
+            String receiverUsername = userRepository.findById(recieverAccount.getUserId())
+                    .map(User::getUsername)
+                    .orElse("Unknown");
+            return new TransactionHistoryDTO(
+                    transaction.getId(),
+                    transaction.getDescription(),
+                    transaction.getAmount(),
+                    transaction.getDate(),
+                    null,
+                    receiverUsername
+            );
+        }).collect(Collectors.toList());
+    }
+
+    public List<TransactionHistoryDTO> getCreditTransactions() throws Exception {
+        User currentLoggedInUser;
+        try {
+            currentLoggedInUser = getCurrentLoggedInUser();
+        } catch (Exception e) {
+            throw new Exception(e.getMessage(), e);
+        }
+
+        Account account = accountRepository.findByUserId(currentLoggedInUser.getId()).get();
+        List<Transaction> transactions = transactionRepository.findByReceiverAccountId(account.getId());
+        return transactions.stream().map(transaction -> {
+            Account senderAccount = accountRepository.findById(transaction.getSenderAccountId()).get();
+            String senderUsername = userRepository.findById(senderAccount.getUserId())
+                    .map(User::getUsername)
+                    .orElse("Unknown");
+            return new TransactionHistoryDTO(
+                    transaction.getId(),
+                    transaction.getDescription(),
+                    transaction.getAmount(),
+                    transaction.getDate(),
+                    senderUsername,
+                    null
+            );
+        }).collect(Collectors.toList());
+    }
 
     private User getCurrentLoggedInUser() throws Exception {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

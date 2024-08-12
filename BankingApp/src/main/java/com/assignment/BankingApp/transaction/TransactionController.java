@@ -38,13 +38,13 @@ public class TransactionController {
     }
 
 
-//    @PreAuthorize("hasAnyAuthority('admin')")
-//    @GetMapping("/all-transactions")
-//    public ResponseEntity<List<TransactionHistoryDTO>> getAllTransactions(@RequestParam(name = "page", defaultValue = "0") Integer page,
-//                                                            @RequestParam(name = "size", defaultValue = "1000") Integer size) {
-//        List<TransactionHistoryDTO> transactions = transactionService.findAll(page, size);
-//        return ResponseEntity.ok(transactions);
-//    }
+    @PreAuthorize("hasAnyAuthority('admin')")
+    @GetMapping
+    public ResponseEntity<List<TransactionHistoryDTO>> getAllTransactions(@RequestParam(name = "page", defaultValue = "0") Integer page,
+                                                            @RequestParam(name = "size", defaultValue = "1000") Integer size) {
+        List<TransactionHistoryDTO> transactions = transactionService.findAll(page, size);
+        return ResponseEntity.ok(transactions);
+    }
 //
 //    @GetMapping("/{transactionId}")
 //    public ResponseEntity<Transaction> getTransactionById(@PathVariable("transactionId") Long transactionId) {
@@ -56,15 +56,25 @@ public class TransactionController {
 //        return ResponseEntity.ok(transaction.get());
 //    }
 //
-//    @GetMapping("/get-debit-transactions")
-//    public ResponseEntity<List<TransactionHistoryDTO>> getDebitTransactions() {
-//        List<TransactionHistoryDTO> transactions = transactionService.getDebitTransactions();
-//        return ResponseEntity.ok(transactions);
-//    }
-//
-//    @GetMapping("/get-credit-transactions")
-//    public ResponseEntity<List<TransactionHistoryDTO>> getCreditTransactions() {
-//        List<TransactionHistoryDTO> transactions = transactionService.getCreditTransactions();
-//        return ResponseEntity.ok(transactions);
-//    }
+    @GetMapping("/get-debit-transactions")
+    public ResponseEntity<?> getDebitTransactions() {
+        try {
+            List<TransactionHistoryDTO> transactions = transactionService.getDebitTransactions();
+            return ResponseEntity.ok(transactions);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
+    }
+
+    @GetMapping("/get-credit-transactions")
+    public ResponseEntity<?> getCreditTransactions() {
+        try {
+            List<TransactionHistoryDTO> transactions = transactionService.getCreditTransactions();
+            return ResponseEntity.ok(transactions);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
+    }
 }
